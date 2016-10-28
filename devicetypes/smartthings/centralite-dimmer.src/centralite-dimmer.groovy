@@ -15,6 +15,7 @@
  *	Author: SmartThings
  *	Date: 2013-12-04
  */
+//DEPRECATED - Using the generic DTH for this device. Users need to be moved before deleting this DTH
 metadata {
 	definition (name: "CentraLite Dimmer", namespace: "smartthings", author: "SmartThings") {
 		capability "Switch Level"
@@ -25,7 +26,6 @@ metadata {
 		capability "Refresh"
 		capability "Sensor"
 
-		fingerprint profileId: "0104", inClusters: "0000,0003,0004,0005,0006,0008,0B04,0B05", outClusters: "0019"
 	}
 
 	// simulator metadata
@@ -105,11 +105,21 @@ def parseDescriptionAsMap(description) {
 
 // Commands to device
 def on() {
-	'zcl on-off on'
+	[
+			'zcl on-off on',
+			'delay 200',
+			"send 0x${zigbee.deviceNetworkId} 0x01 0x${zigbee.endpointId}",
+			'delay 500'
+	]
 }
 
 def off() {
-	'zcl on-off off'
+	[
+			'zcl on-off off',
+			'delay 200',
+			"send 0x${zigbee.deviceNetworkId} 0x01 0x${zigbee.endpointId}",
+			'delay 500'
+	]
 }
 
 def setLevel(value) {
